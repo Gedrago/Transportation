@@ -7,7 +7,7 @@ public class CubeController : MonoBehaviour {
 	script scriptReference ;
 	public int IndividualX, IndividualY ; 
  
-	public int j,k ; 
+	 
  
 
 
