@@ -12,19 +12,22 @@ public class script : MonoBehaviour {
 	public GameObject cubeSelected;
 	GameObject airplane ; 
 	GameObject myCube;
-	public static int planex , planey;
+	public static int planeX , planeY;
 	public GameObject[,] CubeArray; 
 	bool Activeplane; 
 	public float turntime; 
 	public float timediff; 
-	int cargoMax , planeCargo ,cargoIncrease, score  ;
-	 
+	int cargoMax , planeCargo ,cargoIncrease, score;
+	int targetX, targetY;  
+	int moveY, moveX; 
 
 	void Start () {
 		turntime = 0; 
 		timediff = 1.5f;
-		planex = 15;
-		planey = 0;
+		planeX = 15;
+		planeY = 0;
+		targetX = planeX;
+		targetY = planeY; 
 		planeCargo = 0 ;
 		cargoMax = 90;
 		cargoIncrease = 10;
@@ -54,36 +57,58 @@ public class script : MonoBehaviour {
 		//if we click the airplane, activate it 
 
 		// if we click the activated airplane, deactivate it 
-	
+		
 		// check if we clicked the plane and execute the following  
-		if( IndividualX == planex &&  IndividualY== planey){
+		if (IndividualX == planeX && IndividualY == planeY) {
 
-			if (Activeplane == false){
+			if (Activeplane == false) {
 				clickedCube.GetComponent<Renderer> ().material.color = Color.green;
 				Activeplane = true;
-			}
-			else if (Activeplane == true){
+			} else if (Activeplane == true) {
 				clickedCube.GetComponent<Renderer> ().material.color = Color.red;
 				Activeplane = false;
 			}
 		}
 
 		// execute the following if I clicked on 
-		else if(IndividualX == 0 && IndividualY == 8) {
+		else if (IndividualX == 0 && IndividualY == 8) {
 			CubeArray [0, 8].GetComponent<Renderer> ().material.color = Color.black;
-		} 
-			if (Activeplane == true){
-				
-					CubeArray [planex, planey].GetComponent<Renderer> ().material.color = Color.white;
-					CubeArray [0, 8].GetComponent<Renderer> ().material.color = Color.black;
-		
-					planex = IndividualX; 
-					planey = IndividualY;
+		}
 
-					CubeArray [planex, planey].GetComponent<Renderer> ().material.color = Color.green;
-			} 
+		if (Activeplane == true){
+
+			CubeArray [planeX, planeY].GetComponent<Renderer> ().material.color = Color.white;
+			CubeArray [0, 8].GetComponent<Renderer> ().material.color = Color.black;
+
+			planeX = IndividualX; 
+			planeY = IndividualY;
+
+			CubeArray [planeX, planeY].GetComponent<Renderer> ().material.color = Color.green;
+		} 
 	}
-		
+	//walkthrough 
+	void CalculateDirection( ){
+		if (planeY > targetY) {
+		moveY = -1; 
+		} else if (planeY < targetY){
+			moveY = 1;
+		} else {
+			moveY = 0 ;
+		}
+		if (planeX < targetX){
+		moveX = 1; 
+		} 
+		else if (planeX > targetX){
+		moveX = -1; 
+		}
+		else {
+			moveX = 0; 
+		}
+}
+		void movePlane(){
+			CalculateDirection ();
+
+		}
 
 	// Update is called once per frame
 	void Update () {
@@ -94,24 +119,19 @@ public class script : MonoBehaviour {
 				planeCargo = 90; 
 			}
 			 
-			if (planex == 0 && planey == 8) {
+			if (planeX == 0 && planeY == 8) {
 				score += planeCargo;
 				planeCargo = 0; 	
 			}
 			 
 				UIText.text = "cargo: " + planeCargo + " score: " + score ;
 				 
-			 
-		
-		 
 
 			turntime += timediff;
 		}
 			
 	}
-		//when it is the turn, the mover should gain a cargo 
-		//then the airplane gains 10 points of cargo '
-
+		 
 		
 
 }
