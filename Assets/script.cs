@@ -19,23 +19,36 @@ public class script : MonoBehaviour {
 	public float timediff; 
 	int cargoMax , planeCargo ,cargoIncrease, score;
 	int targetX, targetY;  
-	int moveY, moveX; 
+	int moveY, moveX;
+	int startY, startX; 
+	int depotY, depotX;
+	int gridLenX, gridLenY; 
 
 	void Start () {
 		turntime = 0; 
 		timediff = 1.5f;
-		planeX = 15;
-		planeY = 0;
+		planeX = startX; 
+		startX= 0;
+		planeY = startY;
+		startY = 8; 
+		planeY = 8;
 		targetX = planeX;
 		targetY = planeY; 
 		planeCargo = 0 ;
 		cargoMax = 90;
 		cargoIncrease = 10;
-		CubeArray = new GameObject[16, 9];
+		gridLenX = 16;
+		gridLenY = 9; 
+		CubeArray = new GameObject[gridLenX, gridLenY];
+		depotX = 15;
+		depotY = 0;
+
+			
+
 		// 
-		for (int y = 0; y < 9 ; y ++){
-			for (int i = 0; i < 16; i++) {
-				cubeposition = new Vector3 (i * -3 + 6, y * -2 + 10, 0);
+		for (int y = 0; y < gridLenY  ; y ++){
+			for (int i = 0; i < gridLenX  ; i++) {
+				cubeposition = new Vector3 (i *2, y * 2, 0);
 				CubeArray[i,y]= Instantiate (cubePre, cubeposition, Quaternion.identity);
 				// assign the i and y values of the cube in the grid to the specific 
 				//'Individual X' and 'Individual Y' that is distinctly attached to each cubes
@@ -45,12 +58,14 @@ public class script : MonoBehaviour {
 
 		}
 			
-		CubeArray[15, 0].GetComponent<Renderer> ().material.color = Color.red;
-		CubeArray [0, 8].GetComponent<Renderer> ().material.color = Color.black;
+		CubeArray[startX, startY].GetComponent<Renderer> ().material.color = Color.red;
+		CubeArray [depotX, depotY].GetComponent<Renderer> ().material.color = Color.black;
 		Activeplane = false;
 
 		 	 
 	}
+
+
 
 	public void ProcessClick (GameObject clickedCube, int IndividualX , int IndividualY){
 
@@ -71,20 +86,23 @@ public class script : MonoBehaviour {
 		}
 
 		// execute the following if I clicked on 
-		else if (IndividualX == 0 && IndividualY == 8) {
-			CubeArray [0, 8].GetComponent<Renderer> ().material.color = Color.black;
-		}
+		 
 
-		if (Activeplane == true){
+		else if (Activeplane == true){
 
-			CubeArray [planeX, planeY].GetComponent<Renderer> ().material.color = Color.white;
-			CubeArray [0, 8].GetComponent<Renderer> ().material.color = Color.black;
+			 
 
-			planeX = IndividualX; 
-			planeY = IndividualY;
+			targetX = IndividualX; 
+			targetY = IndividualY;
 
-			CubeArray [planeX, planeY].GetComponent<Renderer> ().material.color = Color.green;
+			 
 		} 
+	}
+	 
+	void onMouseOver ( ){
+		// when the mouse hovers over, make the cube do something .. probably change color increase in size 
+		Debug.Log ("i'm over you!");
+
 	}
 	//walkthrough 
 	void CalculateDirection( ){
@@ -105,31 +123,59 @@ public class script : MonoBehaviour {
 			moveX = 0; 
 		}
 }
-		void movePlane(){
-			CalculateDirection ();
+	void MovePlane (){
+		CalculateDirection ();
+		if (Activeplane == true) {
+			if (planeX == depotX && planeX == depotY) {
+				CubeArray [depotX, depotY].GetComponent<Renderer> ().material.color = Color.black;
+			} else {
+				CubeArray [planeX , planeY].GetComponent<Renderer> ().material.color = Color.white;
+				
+			}
 
+			planeX += moveX;
+			planeY += moveY;
+			CubeArray [depotX, depotY].GetComponent<Renderer> ().material.color = Color.black;
+
+			if (planeX >= gridLenX) {
+				planeX = gridLenX - 1;
+			} else if (planeX < 0) {
+				planeX = 0;
+			}
+			if (planeY >= gridLenY) {
+				planeY = gridLenY - 1;
+			} else if (planeY < 0) {
+				planeY = 0;
+			}
+			CubeArray [planeX, planeY].GetComponent<Renderer> ().material.color = Color.green; 
+
+		
 		}
+
+	}
 
 	// Update is called once per frame
 	void Update () {
 		if (Time.time > turntime) {
+			MovePlane (); 
 			if (planeCargo < cargoMax) {
 				planeCargo += cargoIncrease; 
 			} else {
 				planeCargo = 90; 
 			}
 			 
-			if (planeX == 0 && planeY == 8) {
+			if (planeX == depotX && planeY == depotY) {
 				score += planeCargo;
 				planeCargo = 0; 	
 			}
 			 
 				UIText.text = "cargo: " + planeCargo + " score: " + score ;
+				//also displayed how much the score increase by 
 				 
 
 			turntime += timediff;
 		}
-			
+		//display the amount of time that has been going ....therefore displaye Time.time but change the seconds to minutes and...change the the minutes to hour when >60 	
 	}
 		 
 		

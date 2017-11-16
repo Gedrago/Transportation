@@ -27,10 +27,7 @@ public class CubeController : MonoBehaviour {
 	void OnMouseDown (){
  
 		scriptReference.ProcessClick (gameObject, IndividualX , IndividualY);
-		 
- 
-
-
 
 	}
+
 }
