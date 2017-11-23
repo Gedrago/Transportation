@@ -24,7 +24,13 @@ public class script : MonoBehaviour {
 	int depotY, depotX;
 	int gridLenX, gridLenY; 
 	public AudioClip PlayMusic;
-
+	int trainX ;
+	int trainY;
+	int boatX;
+	int boatY;
+	float overallTime;
+	float minutes; 
+	float hour;
 
 	void Start () {
 		
@@ -35,6 +41,10 @@ public class script : MonoBehaviour {
 		planeY = startY;
 		startY = 8; 
 		planeY = 8;
+		trainX = 15; 
+		trainY  = 8;
+		boatX = 0;
+		boatY =0 ; 
 		targetX = planeX;
 		targetY = planeY; 
 		planeCargo = 0 ;
@@ -45,7 +55,7 @@ public class script : MonoBehaviour {
 		CubeArray = new GameObject[gridLenX, gridLenY];
 		depotX = 15;
 		depotY = 0;
-
+		overallTime = 0; 
 			
 
 		// 
@@ -62,6 +72,8 @@ public class script : MonoBehaviour {
 		}
 			
 		CubeArray[startX, startY].GetComponent<Renderer> ().material.color = Color.red;
+		CubeArray[trainX,trainY].GetComponent<Renderer> ().material.color = Color.green;
+		CubeArray[boatX,boatY].GetComponent<Renderer> ().material.color = Color.blue;
 		CubeArray [depotX, depotY].GetComponent<Renderer> ().material.color = Color.black;
 		Activeplane = false;
 
@@ -82,9 +94,11 @@ public class script : MonoBehaviour {
 
 			if (Activeplane == false) {
 				clickedCube.GetComponent<Renderer> ().material.color = Color.green;
+				clickedCube.transform.localScale *= 1.5f;
 				Activeplane = true;
 			} else if (Activeplane == true) {
 				clickedCube.GetComponent<Renderer> ().material.color = Color.red;
+				clickedCube.transform.localScale /= 1.5f;
 				Activeplane = false;
 			}
 			clickedCube.GetComponent<AudioSource>(). Play ();
@@ -94,36 +108,31 @@ public class script : MonoBehaviour {
 		 
 
 		else if (Activeplane == true){
-
-			 
+			clickedCube.GetComponent<Renderer> ().material.color = Color.red;
 
 			targetX = IndividualX; 
 			targetY = IndividualY;
-
+		 
 			 
 		} 
 		 
 	}
 	 
-	void onMouseOver ( ){
-		// when the mouse hovers over, make the cube do something .. probably change color increase in size 
-		Debug.Log ("i'm over you!");
 
-	}
 	//walkthrough 
 	void CalculateDirection( ){
 		if (planeY > targetY) {
-		moveY = -1; 
+			moveY = -1; 
 		} else if (planeY < targetY){
 			moveY = 1;
 		} else {
 			moveY = 0 ;
 		}
 		if (planeX < targetX){
-		moveX = 1; 
+			moveX = 1; 
 		} 
 		else if (planeX > targetX){
-		moveX = -1; 
+			moveX = -1; 
 		}
 		else {
 			moveX = 0; 
@@ -134,9 +143,10 @@ public class script : MonoBehaviour {
 		if (Activeplane == true) {
 			if (planeX == depotX && planeX == depotY) {
 				CubeArray [depotX, depotY].GetComponent<Renderer> ().material.color = Color.black;
+				CubeArray [depotX, depotY].transform.localScale /= 1.5f;
 			} else {
 				CubeArray [planeX , planeY].GetComponent<Renderer> ().material.color = Color.white;
-				
+				CubeArray [planeX , planeY].transform.localScale /= 1.5f;
 			}
 
 			planeX += moveX;
@@ -154,7 +164,7 @@ public class script : MonoBehaviour {
 				planeY = 0;
 			}
 			CubeArray [planeX, planeY].GetComponent<Renderer> ().material.color = Color.green; 
-
+			CubeArray [planeX, planeY].transform.localScale *= 1.5f;
 		
 		}
 
@@ -163,6 +173,23 @@ public class script : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Time.time > turntime) {
+ 
+			overallTime = Time.time; 
+			float rounded = Mathf.Round(overallTime * 1.0f) / 1.0f ;
+			if (rounded > 60) {
+				minutes = rounded / 60; 
+				minutes = Mathf.Round (rounded * 1.0f) / 1.0f; 
+				rounded = 0; 	
+				if (minutes > 60 ){
+					hour = minutes / 60;
+					hour = Mathf.Round (minutes * 1.0f) / 1.0f;  
+					minutes = 0; 
+					rounded = 0;
+
+				}
+
+			}  
+
 			MovePlane (); 
 			if (planeCargo < cargoMax) {
 				planeCargo += cargoIncrease; 
@@ -175,7 +202,7 @@ public class script : MonoBehaviour {
 				planeCargo = 0; 	
 			}
 			 
-				UIText.text = "cargo: " + planeCargo + " score: " + score ;
+			UIText.text = "cargo: " + planeCargo + " score: " + score + " Time is: " + hour +" hour " + minutes +" minutes " + rounded + " seconds" ;
 				//also displayed how much the score increase by 
 				 
 
