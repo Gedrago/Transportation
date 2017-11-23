@@ -23,8 +23,11 @@ public class script : MonoBehaviour {
 	int startY, startX; 
 	int depotY, depotX;
 	int gridLenX, gridLenY; 
+	public AudioClip PlayMusic;
+
 
 	void Start () {
+		
 		turntime = 0; 
 		timediff = 1.5f;
 		planeX = startX; 
@@ -73,7 +76,8 @@ public class script : MonoBehaviour {
 
 		// if we click the activated airplane, deactivate it 
 		
-		// check if we clicked the plane and execute the following  
+		// check if we clicked the plane and execute the following
+
 		if (IndividualX == planeX && IndividualY == planeY) {
 
 			if (Activeplane == false) {
@@ -83,6 +87,7 @@ public class script : MonoBehaviour {
 				clickedCube.GetComponent<Renderer> ().material.color = Color.red;
 				Activeplane = false;
 			}
+			clickedCube.GetComponent<AudioSource>(). Play ();
 		}
 
 		// execute the following if I clicked on 
@@ -97,6 +102,7 @@ public class script : MonoBehaviour {
 
 			 
 		} 
+		 
 	}
 	 
 	void onMouseOver ( ){

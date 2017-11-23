@@ -6,14 +6,15 @@ public class CubeController : MonoBehaviour {
 	
 	script scriptReference ;
 	public int IndividualX, IndividualY ; 
- 
+
+
 	 
  
 
 
 	// Use this for initialization
 	void Start () {
- 
+		
 		scriptReference = GameObject.Find ("Controller").GetComponent<script> ();
  
 		
@@ -25,9 +26,10 @@ public class CubeController : MonoBehaviour {
 	}
 
 	void OnMouseDown (){
- 
+		
 		scriptReference.ProcessClick (gameObject, IndividualX , IndividualY);
 
+		 
 	}
 
 }

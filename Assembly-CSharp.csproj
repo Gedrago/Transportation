@@ -51,6 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\AudioPlay.cs" />
      <Compile Include="Assets\CubeController.cs" />
      <Compile Include="Assets\script.cs" />
  <Reference Include="UnityEngine.Analytics">
